@@ -10,6 +10,9 @@ import (
 	"os/signal"
 	"syscall"
 	"time"
+
+	"github.com/maantos/todoApplication/pkg/data"
+	"github.com/maantos/todoApplication/pkg/handlers"
 )
 
 type config struct {
@@ -20,6 +23,8 @@ type config struct {
 type application struct {
 	config config
 	logger *log.Logger
+	th     *handlers.Tasks
+	db     *data.TasksDB
 }
 
 const version = "1.0.0"
@@ -34,10 +39,13 @@ func main() {
 	flag.Parse()
 
 	l := log.New(os.Stdout, "", log.Ldate|log.Ltime)
+	db := data.NewTasksDB()
+	th := handlers.NewTasksHandler(l, db)
 
 	app := &application{
 		config: cfg,
 		logger: l,
+		th:     th,
 	}
 
 	httpServer := http.Server{
