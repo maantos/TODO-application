@@ -24,10 +24,7 @@ type application struct {
 	config config
 	logger *log.Logger
 	th     *handlers.Tasks
-	db     *data.TasksDB
 }
-
-const version = "1.0.0"
 
 func main() {
 
