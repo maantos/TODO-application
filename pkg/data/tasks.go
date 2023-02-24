@@ -23,19 +23,19 @@ type Task struct {
 
 type TasksDB struct {
 	mu     sync.Mutex
-	bucket map[string]Task
+	bucket map[string]*Task
 }
 
 func NewTasksDB() *TasksDB {
 	once.Do(func() {
 		db = TasksDB{
-			bucket: make(map[string]Task),
+			bucket: make(map[string]*Task),
 		}
 	})
 	return &db
 }
 
-func (db *TasksDB) Create(s Task) error {
+func (db *TasksDB) Create(s *Task) error {
 	if _, ok := db.bucket[string(s.ID)]; ok {
 		return errors.New("user already exist")
 	}
@@ -47,15 +47,15 @@ func (db *TasksDB) Create(s Task) error {
 	return nil
 }
 
-func (db *TasksDB) Read(id TaskID) (Task, error) {
+func (db *TasksDB) Read(id TaskID) (*Task, error) {
 	if c, ok := db.bucket[string(id)]; ok {
 		return c, nil
 	}
 
-	return Task{}, fmt.Errorf("entity with %s id, doesnt exist", id)
+	return nil, fmt.Errorf("entity with %s id, doesnt exist", id)
 }
 
-func (db *TasksDB) Update(s Task) error {
+func (db *TasksDB) Update(s *Task) error {
 	_, err := db.Read(s.ID)
 	if err != nil {
 		return err
@@ -81,8 +81,8 @@ func (db *TasksDB) Delete(id TaskID) error {
 	return nil
 }
 
-func (db *TasksDB) List() []Task {
-	x := []Task{}
+func (db *TasksDB) List() []*Task {
+	x := []*Task{}
 
 	for _, v := range db.bucket {
 		x = append(x, v)

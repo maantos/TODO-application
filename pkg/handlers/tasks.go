@@ -9,6 +9,8 @@ import (
 // struct used as key in context
 type TaskKey struct{}
 
+type KeyProduct struct{}
+
 type Tasks struct {
 	l  *log.Logger
 	db *data.TasksDB

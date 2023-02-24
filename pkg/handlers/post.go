@@ -8,6 +8,6 @@ import (
 
 func (t *Tasks) CreateTask(rw http.ResponseWriter, r *http.Request) {
 
-	task := r.Context().Value(TaskKey{}).(data.Task)
+	task := r.Context().Value(KeyProduct{}).(*data.Task)
 	t.db.Create(task)
 }
