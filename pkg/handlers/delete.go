@@ -8,6 +8,14 @@ import (
 	"github.com/maantos/todoApplication/pkg/data"
 )
 
+// swagger:route DELETE /tasks/{id} Tasks deleteTask
+// Removes task from the database
+//
+// responses:
+//
+//	204: noContentResponse
+//	404: errorResponse
+//	501: errorResponse
 func (t *Tasks) DeletTask(rw http.ResponseWriter, r *http.Request) {
 
 	id := chi.URLParam(r, "id")

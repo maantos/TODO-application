@@ -1,0 +1,89 @@
+{
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "schemes": [
+    "http"
+  ],
+  "swagger": "2.0",
+  "info": {
+    "description": "The purpose of this application is to provide an application\nthat is using plain go code to define an API",
+    "title": "TODO Tasks API.",
+    "termsOfService": "there are no TOS at this moment, use at your own risk we take no responsibility",
+    "version": "0.0.1"
+  },
+  "host": "localhost",
+  "basePath": "/v1",
+  "paths": {
+    "/tasks": {
+      "get": {
+        "description": "Get TODO tasks from database",
+        "tags": [
+          "tasks"
+        ],
+        "operationId": "listTasks",
+        "responses": {
+          "200": {
+            "$ref": "#/responses/tasksResponse"
+          }
+        }
+      },
+      "post": {
+        "description": "Create a new TODO task",
+        "tags": [
+          "Tasks"
+        ],
+        "operationId": "createTask",
+        "responses": {
+          "200": {
+            "$ref": "#/responses/productResponse"
+          },
+          "422": {
+            "$ref": "#/responses/errorValidation"
+          },
+          "501": {
+            "$ref": "#/responses/errorResponse"
+          }
+        }
+      }
+    },
+    "/tasks/{id}": {
+      "delete": {
+        "description": "Removes task from the database",
+        "tags": [
+          "Tasks"
+        ],
+        "operationId": "deleteTask",
+        "responses": {
+          "204": {
+            "$ref": "#/responses/noContentResponse"
+          },
+          "404": {
+            "$ref": "#/responses/errorResponse"
+          },
+          "501": {
+            "$ref": "#/responses/errorResponse"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Task": {
+      "description": "Task represents simple TODO task entity",
+      "x-go-package": "github.com/maantos/todoApplication/pkg/data"
+    }
+  },
+  "responses": {
+    "tasksResponse": {
+      "description": "A list of TODO tasks",
+      "schema": {
+        "type": "array",
+        "items": {}
+      }
+    }
+  }
+}
