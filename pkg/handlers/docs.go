@@ -27,11 +27,51 @@ import "github.com/maantos/todoApplication/pkg/data"
 // NOTE: Types that are defined here are used purely for documentation purpose,.
 // None of the handlers is using them
 
-// A list of TODO tasks
+// A list of todo-tasks
 //
 //swagger:response tasksResponse
 type tasksResponseWrapper struct {
 	// All current TODO tasks
 	// in: body
-	Body []data.Task
+	Body []*data.Task
+}
+
+// Single TODO task
+//
+//swagger:response taskResponse
+type taskResponseWrapper struct {
+	// Single todo-task
+	// in: body
+	Body data.Task
+}
+
+// No content is returned by this API endpoint
+// swagger:response noContentResponse
+type noContentResponseWrapper struct {
+}
+
+// swagger:response errorResponse
+type errorResponseWrapper struct {
+	// Error message descriptions
+	ErrorMessage string
+}
+
+// swagger:response createdTask
+type taskIDResponsewrapper struct {
+	// The id of the task for which the operation relates
+	ID string `json:"id"`
+}
+
+// swagger:parameters deleteTask
+type taskIDParamsWrapper struct {
+	// The id of the task for which the operation relates
+	ID string `json:"id"`
+}
+
+// swagger:parameters createTask
+type taskParamsWrapper struct {
+	// Product data structure to Update or Create.
+	// in: body
+	// required: true
+	Body data.Task
 }

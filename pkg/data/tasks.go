@@ -19,7 +19,7 @@ type TaskID string
 type Task struct {
 	// the id of the task
 	//
-	// Required: true
+	// Required: false
 	// min: 1
 	ID TaskID `json:"id"`
 

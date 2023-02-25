@@ -21,10 +21,7 @@
     "/tasks": {
       "get": {
         "description": "Get TODO tasks from database",
-        "tags": [
-          "tasks"
-        ],
-        "operationId": "listTasks",
+        "operationId": "tasks",
         "responses": {
           "200": {
             "$ref": "#/responses/tasksResponse"
@@ -34,17 +31,28 @@
       "post": {
         "description": "Create a new TODO task",
         "tags": [
-          "Tasks"
+          "tasks"
         ],
         "operationId": "createTask",
+        "parameters": [
+          {
+            "description": "Product data structure to Update or Create.",
+            "name": "Body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Task"
+            }
+          }
+        ],
         "responses": {
           "200": {
-            "$ref": "#/responses/productResponse"
+            "$ref": "#/responses/createdTask"
           },
-          "422": {
-            "$ref": "#/responses/errorValidation"
+          "400": {
+            "$ref": "#/responses/errorResponse"
           },
-          "501": {
+          "409": {
             "$ref": "#/responses/errorResponse"
           }
         }
@@ -54,17 +62,23 @@
       "delete": {
         "description": "Removes task from the database",
         "tags": [
-          "Tasks"
+          "tasks"
         ],
         "operationId": "deleteTask",
+        "parameters": [
+          {
+            "type": "string",
+            "x-go-name": "ID",
+            "description": "The id of the task for which the operation relates",
+            "name": "id",
+            "in": "query"
+          }
+        ],
         "responses": {
           "204": {
             "$ref": "#/responses/noContentResponse"
           },
           "404": {
-            "$ref": "#/responses/errorResponse"
-          },
-          "501": {
             "$ref": "#/responses/errorResponse"
           }
         }
@@ -74,15 +88,74 @@
   "definitions": {
     "Task": {
       "description": "Task represents simple TODO task entity",
+      "type": "object",
+      "required": [
+        "title",
+        "description"
+      ],
+      "properties": {
+        "description": {
+          "description": "tasks short description",
+          "type": "string",
+          "maxLength": 255,
+          "x-go-name": "Description"
+        },
+        "done": {
+          "description": "the status of the task",
+          "type": "boolean",
+          "x-go-name": "Done",
+          "example": false
+        },
+        "id": {
+          "$ref": "#/definitions/TaskID"
+        },
+        "title": {
+          "description": "the title of the task",
+          "type": "string",
+          "maxLength": 50,
+          "x-go-name": "Title"
+        }
+      },
+      "x-go-package": "github.com/maantos/todoApplication/pkg/data"
+    },
+    "TaskID": {
+      "type": "string",
       "x-go-package": "github.com/maantos/todoApplication/pkg/data"
     }
   },
   "responses": {
+    "createdTask": {
+      "headers": {
+        "id": {
+          "type": "string",
+          "description": "The id of the task for which the operation relates"
+        }
+      }
+    },
+    "errorResponse": {
+      "headers": {
+        "ErrorMessage": {
+          "type": "string",
+          "description": "Error message descriptions"
+        }
+      }
+    },
+    "noContentResponse": {
+      "description": "No content is returned by this API endpoint"
+    },
+    "taskResponse": {
+      "description": "Single TODO task",
+      "schema": {
+        "$ref": "#/definitions/Task"
+      }
+    },
     "tasksResponse": {
-      "description": "A list of TODO tasks",
+      "description": "A list of todo-tasks",
       "schema": {
         "type": "array",
-        "items": {}
+        "items": {
+          "$ref": "#/definitions/Task"
+        }
       }
     }
   }

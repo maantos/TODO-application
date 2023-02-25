@@ -6,11 +6,11 @@ import (
 	"github.com/maantos/todoApplication/pkg/data"
 )
 
-// swagger:route GET /tasks tasks listTasks
+// swagger:route GET /tasks tasks
 // Get TODO tasks from database
 // responses:
+//
 //	200: tasksResponse
-
 func (t *Tasks) ListAll(rw http.ResponseWriter, r *http.Request) {
 	t.l.Println("[DEBUG] get all tasks")
 
