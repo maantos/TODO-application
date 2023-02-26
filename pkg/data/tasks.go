@@ -13,14 +13,35 @@ var (
 
 type TaskID string
 
+// Task represents simple TODO task entity
+//
+// swagger:model
 type Task struct {
-	ID          TaskID `json:"id"`
-	Done        bool   `json:"done"`
-	Title       string `json:"title"`
+	// the id of the task
+	//
+	// Required: false
+	// min: 1
+	ID TaskID `json:"id"`
+
+	// the status of the task
+	//
+	// required: false
+	// example: false
+	Done bool `json:"done"`
+
+	// the title of the task
+	// required: true
+	// max length: 50
+	Title string `json:"title"`
+
+	// tasks short description
+	// required: true
+	// max length: 255
 	Description string `json:"description"`
 	// CreateOn    time.Time
 }
 
+// TaskDB acts as a database
 type TasksDB struct {
 	mu     sync.Mutex
 	bucket map[string]*Task

@@ -1,0 +1,162 @@
+{
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "schemes": [
+    "http"
+  ],
+  "swagger": "2.0",
+  "info": {
+    "description": "The purpose of this application is to provide an application\nthat is using plain go code to define an API",
+    "title": "TODO Tasks API.",
+    "termsOfService": "there are no TOS at this moment, use at your own risk we take no responsibility",
+    "version": "0.0.1"
+  },
+  "host": "localhost",
+  "basePath": "/v1",
+  "paths": {
+    "/tasks": {
+      "get": {
+        "description": "Get TODO tasks from database",
+        "operationId": "tasks",
+        "responses": {
+          "200": {
+            "$ref": "#/responses/tasksResponse"
+          }
+        }
+      },
+      "post": {
+        "description": "Create a new TODO task",
+        "tags": [
+          "tasks"
+        ],
+        "operationId": "createTask",
+        "parameters": [
+          {
+            "description": "Product data structure to Update or Create.",
+            "name": "Body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Task"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/createdTask"
+          },
+          "400": {
+            "$ref": "#/responses/errorResponse"
+          },
+          "409": {
+            "$ref": "#/responses/errorResponse"
+          }
+        }
+      }
+    },
+    "/tasks/{id}": {
+      "delete": {
+        "description": "Removes task from the database",
+        "tags": [
+          "tasks"
+        ],
+        "operationId": "deleteTask",
+        "parameters": [
+          {
+            "type": "string",
+            "x-go-name": "ID",
+            "description": "The id of the task for which the operation relates",
+            "name": "id",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "204": {
+            "$ref": "#/responses/noContentResponse"
+          },
+          "404": {
+            "$ref": "#/responses/errorResponse"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Task": {
+      "description": "Task represents simple TODO task entity",
+      "type": "object",
+      "required": [
+        "title",
+        "description"
+      ],
+      "properties": {
+        "description": {
+          "description": "tasks short description",
+          "type": "string",
+          "maxLength": 255,
+          "x-go-name": "Description"
+        },
+        "done": {
+          "description": "the status of the task",
+          "type": "boolean",
+          "x-go-name": "Done",
+          "example": false
+        },
+        "id": {
+          "$ref": "#/definitions/TaskID"
+        },
+        "title": {
+          "description": "the title of the task",
+          "type": "string",
+          "maxLength": 50,
+          "x-go-name": "Title"
+        }
+      },
+      "x-go-package": "github.com/maantos/todoApplication/pkg/data"
+    },
+    "TaskID": {
+      "type": "string",
+      "x-go-package": "github.com/maantos/todoApplication/pkg/data"
+    }
+  },
+  "responses": {
+    "createdTask": {
+      "headers": {
+        "id": {
+          "type": "string",
+          "description": "The id of the task for which the operation relates"
+        }
+      }
+    },
+    "errorResponse": {
+      "headers": {
+        "ErrorMessage": {
+          "type": "string",
+          "description": "Error message descriptions"
+        }
+      }
+    },
+    "noContentResponse": {
+      "description": "No content is returned by this API endpoint"
+    },
+    "taskResponse": {
+      "description": "Single TODO task",
+      "schema": {
+        "$ref": "#/definitions/Task"
+      }
+    },
+    "tasksResponse": {
+      "description": "A list of todo-tasks",
+      "schema": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/Task"
+        }
+      }
+    }
+  }
+}
