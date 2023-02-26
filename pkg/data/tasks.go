@@ -6,10 +6,13 @@ import (
 	"sync"
 )
 
-var (
-	db   TasksDB
-	once sync.Once
-)
+type Store interface {
+	Create(*Task) error
+	Read(TaskID) (*Task, error)
+	Update(*Task) error
+	Delete(TaskID) error
+	List() []*Task
+}
 
 type TaskID string
 
@@ -48,12 +51,10 @@ type TasksDB struct {
 }
 
 func NewTasksDB() *TasksDB {
-	once.Do(func() {
-		db = TasksDB{
-			bucket: make(map[string]*Task),
-		}
-	})
-	return &db
+	return &TasksDB{
+		bucket: make(map[string]*Task),
+		mu:     sync.Mutex{},
+	}
 }
 
 func (db *TasksDB) Create(s *Task) error {
