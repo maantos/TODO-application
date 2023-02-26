@@ -11,7 +11,7 @@ type TaskKey struct{}
 
 type Tasks struct {
 	l  *log.Logger
-	db data.Store
+	db data.Storage
 }
 
 func NewTasksServer(logger *log.Logger, db *data.TasksDB) *Tasks {
