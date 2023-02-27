@@ -26,7 +26,7 @@ func (t *Tasks) ValidateTask(next http.Handler) http.Handler {
 			return
 		}
 
-		ctx := context.WithValue(r.Context(), KeyProduct{}, task)
+		ctx := context.WithValue(r.Context(), TaskKey{}, task)
 
 		next.ServeHTTP(rw, r.WithContext(ctx))
 	})

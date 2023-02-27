@@ -2,14 +2,19 @@ package data
 
 import (
 	"errors"
-	"fmt"
 	"sync"
 )
 
-var (
-	db   TasksDB
-	once sync.Once
-)
+var ErrTaskNotFound = errors.New("Task was not found")
+var ErrTaskAlreadyExist = errors.New("Task already exist")
+
+type Storage interface {
+	Create(*Task) error
+	Read(TaskID) (*Task, error)
+	Update(*Task) error
+	Delete(TaskID) error
+	List() []*Task
+}
 
 type TaskID string
 
@@ -44,40 +49,38 @@ type Task struct {
 // TaskDB acts as a database
 type TasksDB struct {
 	mu     sync.Mutex
-	bucket map[string]*Task
+	bucket map[TaskID]*Task
 }
 
 func NewTasksDB() *TasksDB {
-	once.Do(func() {
-		db = TasksDB{
-			bucket: make(map[string]*Task),
-		}
-	})
-	return &db
+	return &TasksDB{
+		bucket: make(map[TaskID]*Task),
+		mu:     sync.Mutex{},
+	}
 }
 
-func (db *TasksDB) Create(s *Task) error {
-	if _, ok := db.bucket[string(s.ID)]; ok {
-		return errors.New("user already exist")
+func (db *TasksDB) Create(t *Task) error {
+	if _, ok := db.bucket[t.ID]; ok {
+		return ErrTaskAlreadyExist
 	}
 
 	db.mu.Lock()
 	defer db.mu.Unlock()
 
-	db.bucket[string(s.ID)] = s
+	db.bucket[t.ID] = t
 	return nil
 }
 
 func (db *TasksDB) Read(id TaskID) (*Task, error) {
-	if c, ok := db.bucket[string(id)]; ok {
+	if c, ok := db.bucket[id]; ok {
 		return c, nil
 	}
 
-	return nil, fmt.Errorf("entity with %s id, doesnt exist", id)
+	return nil, ErrTaskNotFound
 }
 
-func (db *TasksDB) Update(s *Task) error {
-	_, err := db.Read(s.ID)
+func (db *TasksDB) Update(t *Task) error {
+	_, err := db.Read(t.ID)
 	if err != nil {
 		return err
 	}
@@ -85,7 +88,7 @@ func (db *TasksDB) Update(s *Task) error {
 	db.mu.Lock()
 	defer db.mu.Unlock()
 
-	db.bucket[string(s.ID)] = s
+	db.bucket[t.ID] = t
 	return nil
 }
 
@@ -98,7 +101,7 @@ func (db *TasksDB) Delete(id TaskID) error {
 	db.mu.Lock()
 	defer db.mu.Unlock()
 
-	delete(db.bucket, string(id))
+	delete(db.bucket, id)
 	return nil
 }
 

@@ -17,7 +17,7 @@ import (
 //	409: errorResponse
 func (t *Tasks) CreateTask(rw http.ResponseWriter, r *http.Request) {
 
-	task := r.Context().Value(KeyProduct{}).(*data.Task)
+	task := r.Context().Value(TaskKey{}).(*data.Task)
 	err := t.db.Create(task)
 	if err != nil {
 		t.l.Printf("[Error] Error while creting task")
