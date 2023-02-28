@@ -10,9 +10,6 @@ import (
 	"os/signal"
 	"syscall"
 	"time"
-
-	"github.com/maantos/todoApplication/pkg/data"
-	"github.com/maantos/todoApplication/pkg/handlers"
 )
 
 type config struct {
