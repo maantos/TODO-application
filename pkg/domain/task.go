@@ -2,6 +2,14 @@ package domain
 
 type TaskID string
 
+//pacakge domain contains all the informations about
+// all the objcect and describe interactions between them.
+// This package should have no dependencies to any other project
+//hexagonal architecture
+// Ports -> interfaces
+// Adaptors components implementing the contract
+//All the subpackages only comunicate by the interfaces defined here.
+
 // Task represents simple TODO task entity
 //
 // swagger:model

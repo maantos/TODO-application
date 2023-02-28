@@ -7,6 +7,8 @@ import (
 	"github.com/maantos/todoApplication/pkg/domain"
 )
 
+//All logic conected with the database is in the db package
+
 var ErrTaskNotFound = errors.New("element not found")
 var ErrTaskAlreadyExist = errors.New("element already exist")
 

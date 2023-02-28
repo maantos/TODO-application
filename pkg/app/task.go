@@ -4,6 +4,8 @@ import (
 	"github.com/maantos/todoApplication/pkg/domain"
 )
 
+//App package contains all the bussines logic
+
 // taskService implements domain.TaskService
 type taskService struct {
 	db domain.TaskDB

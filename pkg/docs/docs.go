@@ -19,7 +19,7 @@
 //	- application/json
 //
 // swagger:meta
-package handlers
+package api
 
 import "github.com/maantos/todoApplication/pkg/domain"
 
