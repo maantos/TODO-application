@@ -3,30 +3,26 @@ package http
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"net/http"
 
-	"github.com/maantos/todoApplication/pkg/data"
+	"github.com/maantos/todoApplication/pkg/domain"
 )
 
-func (t *Tasks) ValidateTask(next http.Handler) http.Handler {
+func (h *Handler) ValidateBody(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
-		task := &data.Task{}
-		err := data.FromJSON(task, r.Body)
+		task := &domain.Task{}
+		err := json.NewDecoder(r.Body).Decode(task)
 		if err != nil {
-			t.l.Println("[ERROR] deserializing product", err)
-
-			rw.WriteHeader(http.StatusBadRequest)
-			x := struct {
-				Message string `json:"message"`
-			}{
-				Message: err.Error(),
+			resp := Response{
+				Code: http.StatusBadRequest,
+				Msg:  fmt.Sprintf("invalid request body. %s", err.Error()),
 			}
-			buff, _ := json.Marshal(x)
-			rw.Write(buff)
+			respond(rw, r, &resp)
 			return
 		}
 
-		ctx := context.WithValue(r.Context(), TaskKey{}, task)
+		ctx := context.WithValue(r.Context(), ContextBodyKey{}, task)
 
 		next.ServeHTTP(rw, r.WithContext(ctx))
 	})

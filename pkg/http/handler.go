@@ -9,8 +9,6 @@ import (
 	"github.com/maantos/todoApplication/pkg/domain"
 )
 
-type TaskKey struct{}
-
 type Handler struct {
 	tskSvc domain.TaskService
 }
@@ -26,7 +24,7 @@ func NewHandler(svc domain.TaskService) *Handler {
 // responses:
 //
 //	200: tasksResponse
-func (h *Handler) ListTasks(rw http.ResponseWriter, r *http.Request) {
+func (h *Handler) GetTasks(rw http.ResponseWriter, r *http.Request) {
 	// t.l.Println("[DEBUG] get all tasks")
 
 	prods := h.tskSvc.List()
@@ -52,7 +50,7 @@ func (h *Handler) ListTasks(rw http.ResponseWriter, r *http.Request) {
 //	409: errorResponse
 func (h *Handler) CreateTask(rw http.ResponseWriter, r *http.Request) {
 
-	task := r.Context().Value(TaskKey{}).(*domain.Task)
+	task := r.Context().Value(ContextBodyKey{}).(*domain.Task)
 	err := h.tskSvc.Create(task)
 	if err != nil {
 		rw.WriteHeader(http.StatusConflict)
@@ -86,11 +84,11 @@ func (h *Handler) CreateTask(rw http.ResponseWriter, r *http.Request) {
 //
 //	204: noContentResponse
 //	404: errorResponse
-func (h *Handler) DeletTask(rw http.ResponseWriter, r *http.Request) {
+func (h *Handler) DeleteTask(rw http.ResponseWriter, r *http.Request) {
 
 	id := chi.URLParam(r, "id")
 
-	err := h.tskSvc.Delete(id)
+	err := h.tskSvc.Delete(domain.TaskID(id))
 
 	if err != nil {
 		rw.WriteHeader(http.StatusNotFound)
@@ -104,4 +102,15 @@ func (h *Handler) DeletTask(rw http.ResponseWriter, r *http.Request) {
 		return
 	}
 	rw.WriteHeader(http.StatusNoContent)
+}
+
+// swagger:route GET /
+// healthcheck
+//
+// responses:
+//
+//	200: StatusOK
+func (h *Handler) healthCheck(rw http.ResponseWriter, r *http.Request) {
+	rw.WriteHeader(http.StatusOK)
+	rw.Write([]byte("Site is up."))
 }
