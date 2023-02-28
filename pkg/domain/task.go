@@ -30,6 +30,14 @@ type Task struct {
 	// CreateOn    time.Time
 }
 
+type TaskService interface {
+	Create(*Task) error
+	Get(TaskID) (*Task, error)
+	Update(*Task) error
+	Delete(TaskID) error
+	List() []*Task
+}
+
 type TaskDB interface {
 	Create(*Task) error
 	Get(TaskID) (*Task, error)

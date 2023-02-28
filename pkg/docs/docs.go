@@ -21,7 +21,7 @@
 // swagger:meta
 package handlers
 
-import "github.com/maantos/todoApplication/pkg/data"
+import "github.com/maantos/todoApplication/pkg/domain"
 
 //
 // NOTE: Types that are defined here are used purely for documentation purpose,.
@@ -33,7 +33,7 @@ import "github.com/maantos/todoApplication/pkg/data"
 type tasksResponseWrapper struct {
 	// All current TODO tasks
 	// in: body
-	Body []*data.Task
+	Body []*domain.Task
 }
 
 // Single TODO task
@@ -42,7 +42,7 @@ type tasksResponseWrapper struct {
 type taskResponseWrapper struct {
 	// Single todo-task
 	// in: body
-	Body data.Task
+	Body domain.Task
 }
 
 // No content is returned by this API endpoint
@@ -73,5 +73,5 @@ type taskParamsWrapper struct {
 	// Product data structure to Update or Create.
 	// in: body
 	// required: true
-	Body data.Task
+	Body domain.Task
 }

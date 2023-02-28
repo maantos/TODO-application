@@ -3,11 +3,11 @@ package http
 import (
 	"net/http"
 
-	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/v5"
 	"github.com/go-openapi/runtime/middleware"
 )
 
-func (a *application) routes() http.Handler {
+func Routes() http.Handler {
 
 	r := chi.NewRouter()
 
