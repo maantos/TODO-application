@@ -116,11 +116,11 @@
           "x-go-name": "Title"
         }
       },
-      "x-go-package": "github.com/maantos/todoApplication/pkg/data"
+      "x-go-package": "github.com/maantos/todoApplication/pkg/domain"
     },
     "TaskID": {
       "type": "string",
-      "x-go-package": "github.com/maantos/todoApplication/pkg/data"
+      "x-go-package": "github.com/maantos/todoApplication/pkg/domain"
     }
   },
   "responses": {

@@ -2,8 +2,6 @@ package main
 
 import (
 	"context"
-	"flag"
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -11,44 +9,26 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/maantos/todoApplication/pkg/data"
-	"github.com/maantos/todoApplication/pkg/handlers"
+	"github.com/go-chi/chi/v5"
+	"github.com/maantos/todoApplication/pkg/application"
+	"github.com/maantos/todoApplication/pkg/db"
+	thttp "github.com/maantos/todoApplication/pkg/http"
 )
-
-type config struct {
-	port int
-	env  string
-}
-
-type application struct {
-	config config
-	logger *log.Logger
-	th     *handlers.Tasks
-}
 
 func main() {
 
-	var cfg config
-
-	//Read flags from cmd-line in none use default
-	flag.IntVar(&cfg.port, "port", 8080, "API server port")
-	flag.StringVar(&cfg.env, "env", "dev", "Environment (development|staging|production)")
-	flag.Parse()
-
 	l := log.New(os.Stdout, "", log.Ldate|log.Ltime)
-	db := data.NewTasksDB()
-	th := handlers.NewTasksHandler(l, db)
 
-	app := &application{
-		config: cfg,
-		logger: l,
-		th:     th,
-	}
+	r := chi.NewRouter()
+	db := db.NewTasksStorage()
+	service := application.NewTaskService(db)
+	h := thttp.NewHandler(service)
+	thttp.Routes(r, h)
 
 	httpServer := http.Server{
-		Addr:         fmt.Sprintf(":%d", app.config.port),
-		Handler:      app.routes(),
-		ErrorLog:     app.logger,        // set the logger for the server
+		Addr:         ":8080",
+		Handler:      r,
+		ErrorLog:     l,                 // set the logger for the server
 		ReadTimeout:  5 * time.Second,   // max time to read request from the client
 		WriteTimeout: 10 * time.Second,  // max time to write response to the client
 		IdleTimeout:  120 * time.Second, // max time for connections using TCP Keep-Alive
@@ -56,7 +36,7 @@ func main() {
 
 	//Below we want to allow server to gracefully shutdown
 	go func() {
-		app.logger.Printf("Starting %s server on port %d...", app.config.env, app.config.port)
+		l.Println("Starting server on port :8080...")
 		if err := httpServer.ListenAndServe(); err != nil {
 			httpServer.ErrorLog.Fatal(err)
 		}
