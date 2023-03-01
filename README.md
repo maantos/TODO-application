@@ -1,3 +1,4 @@
+![Pipeline](https://github.com/maantos/TODO-application/actions/workflows/audit.yml/badge.svg)
 # TODO-application
 Simple TODO application using golang
 
