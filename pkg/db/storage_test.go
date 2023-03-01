@@ -57,7 +57,10 @@ func TestCreateUpdateTasks(t *testing.T) {
 		err := ts.Update(updated_task)
 		assert.NoError(t, err, "=> update failed")
 
-		if get, err := ts.Get(updated_task.ID); !reflect.DeepEqual(get, updated_task) || assert.Error(t, err) {
+		get, err := ts.Get(updated_task.ID)
+		assert.Nil(t, err)
+
+		if !reflect.DeepEqual(get, updated_task) {
 			t.Errorf("=> failed to update task, got %v wanted %v", get, updated_task)
 		}
 	})
