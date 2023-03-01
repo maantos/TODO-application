@@ -31,7 +31,7 @@ jobs:
       run: go install honnef.co/go/tools/cmd/staticcheck@latest
 
     - name: Run staticcheck
-      run: staticcheck ./...
+      run: go list ./... | grep -F -e github.com/maantos/todoApplication/docs -v | xargs staticcheck
 
     - name: Install golint
       run: go install golang.org/x/lint/golint@latest
